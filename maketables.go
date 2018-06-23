@@ -150,12 +150,27 @@ func loadUnicodeData() {
 	}
 }
 
+// Use the Unicode table with the following changes:
+// - do not confuse "m" with "rn"
+// - do confuse "π" with "n"
 func makeTables() {
 	out := fmt.Sprintf("%s\n", originalHeader)
 	out += fmt.Sprint("var confusablesMap = map[rune]string{\n\n")
 	for _, c := range confusables {
-		out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, string(c.v))
+		if strings.Contains(string(c.v), "rn") {
+			// Avoid m -> m loop
+			if string(c.k) != "m" {
+				out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, strings.Replace(string(c.v), "rn", "m", -1))
+			}
+			continue
+		} else if strings.Contains(string(c.v), "π") {
+			out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, strings.Replace(string(c.v), "π", "n", -1))
+			continue
+		} else {
+			out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, string(c.v))
+		}
 	}
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'π', "n")
 	out += fmt.Sprintln("}")
 
 	WriteGoFile("tables.go", "confusables", []byte(out))

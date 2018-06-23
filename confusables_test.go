@@ -1,7 +1,6 @@
 package confusables
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -11,7 +10,7 @@ func TestSkeleton(t *testing.T) {
 	skeleton := Skeleton(s)
 
 	if skeleton != expected {
-		t.Error(fmt.Sprintf("Skeleton(%s) should result in %s", s, expected))
+		t.Errorf("skeleton(%s) should result in %s", s, expected)
 	}
 }
 
@@ -30,7 +29,7 @@ func TestCompareEqual(t *testing.T) {
 
 	for _, v := range vectors {
 		s1, s2 := v[0], v[1]
-		if !Confusable(s1, s2) {
+		if Skeleton(s1) != Skeleton(s2) {
 			t.Errorf("Skeleton strings %+q and %+q were expected to be equal", s1, s2)
 		}
 	}
@@ -40,7 +39,7 @@ func TestCompareDifferent(t *testing.T) {
 	s1 := "Paypal"
 	s2 := "paypal"
 
-	if Confusable(s1, s2) {
+	if Skeleton(s1) == Skeleton(s2) {
 		t.Errorf("Skeleton strings %+q and %+q were expected to be different", s1, s2)
 	}
 }

@@ -11,7 +11,7 @@ import (
 // Skeleton converts a string to its skeleton form as described in
 // http://www.unicode.org/reports/tr39/#Confusable_Detection
 func Skeleton(s string) string {
-	s = norm.NFD.String(s)
+	s = norm.NFKD.String(s)
 	for i, w := 0, 0; i < len(s); i += w {
 		char, width := utf8.DecodeRuneInString(s[i:])
 		replacement, exists := confusablesMap[char]
@@ -22,7 +22,7 @@ func Skeleton(s string) string {
 			w = width
 		}
 	}
-	s = norm.NFD.String(s)
+	s = norm.NFKD.String(s)
 
 	return s
 }

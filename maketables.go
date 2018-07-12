@@ -152,7 +152,11 @@ func loadUnicodeData() {
 
 // Use the Unicode table with the following changes:
 // - do not confuse "m" with "rn"
-// - do confuse "π" with "n"
+// - confuse "μ" (mu) with "u"
+// - confuse "χ" (chi) with "x"
+// - confuse "ʀ" (Latin small R) with "R"
+// - confuse "ኮ" (Ethiopic syllabel Ko) with "r"
+// - various additions as below
 func makeTables() {
 	out := fmt.Sprintf("%s\n", originalHeader)
 	out += fmt.Sprint("var confusablesMap = map[rune]string{\n\n")
@@ -166,10 +170,52 @@ func makeTables() {
 		} else if strings.Contains(string(c.v), "π") {
 			out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, strings.Replace(string(c.v), "π", "n", -1))
 			continue
+		} else if strings.Contains(string(c.v), "μ") {
+			out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, strings.Replace(string(c.v), "μ", "u", -1))
+			continue
+		} else if strings.Contains(string(c.v), "χ") {
+			out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, strings.Replace(string(c.v), "χ", "x", -1))
+			continue
+		} else if strings.Contains(string(c.v), "ʀ") {
+			out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, strings.Replace(string(c.v), "ʀ", "R", -1))
+			continue
+		} else if strings.Contains(string(c.v), "ኮ") {
+			out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, strings.Replace(string(c.v), "ኮ", "r", -1))
+			continue
 		} else {
 			out += fmt.Sprintf("0x%.8X: %+q,\n", c.k, string(c.v))
 		}
 	}
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ᛒ', "B")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｂ', "b")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｄ', "D")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ḍ', "d")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｄ', "d")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｆ', "F")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｆ', "f")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｇ', "G")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｋ', "k")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｌ', "L")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｍ', "m")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ɴ', "N")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｎ', "n")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ⴍ', "Q")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ⴓ', "Q")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｑ', "Q")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｑ', "q")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｒ', "R")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ʀ', "R")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ᚱ', "R")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｒ', "r")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ⴝ', "S")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｔ', "t")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ա', "U")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｕ', "U")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｕ', "u")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｖ', "V")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'Ｗ', "W")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｗ', "w")
+	out += fmt.Sprintf("0x%.8X: %+q,\n", 'ｚ', "z")
 	out += fmt.Sprintf("0x%.8X: %+q,\n", 'π', "n")
 	out += fmt.Sprintln("}")
 
